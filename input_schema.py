@@ -3,6 +3,6 @@ INPUT_SCHEMA = {
         'datatype': 'STRING',
         'required': True,
         'shape': [1],
-        'example': ["Draw a penguine by an artist."]
+        'example': ["a living room, bright modern Scandinavian style house, large windows, magazine photoshoot, 8k, studio lighting"]
     }
 }
