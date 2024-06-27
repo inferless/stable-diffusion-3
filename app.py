@@ -2,7 +2,7 @@ from diffusers import StableDiffusion3Pipeline
 import torch
 from io import BytesIO
 import base64
-# import os
+import os
 
 class InferlessPythonModel:
     def initialize(self):
