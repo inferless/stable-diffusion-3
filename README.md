@@ -23,12 +23,50 @@ To access the custom runtime window in Inferless, simply navigate to the sidebar
 
 Next, provide a suitable name for your custom runtime and proceed by uploading the inferless-runtime.yaml file given above. Finally, ensure you save your changes by clicking on the save button.
 
+### Add Your Hugging Face Access Token
+Go into the `inferless.yaml` and replace `<hugging_face_token>` with your hugging face access token. Make sure to check the repo is private to protect your hugging face token.
+
 ### Import the Model in Inferless
 Log in to your inferless account, select the workspace you want the model to be imported into and click the Add Model button.
 
 Select the PyTorch as framework and choose **Repo(custom code)** as your model source and select your provider, and use the forked repo URL as the **Model URL**.
 
 Enter all the required details to Import your model. Refer [this link](https://docs.inferless.com/integrations/github-custom-code) for more information on model import.
+
+---
+## Curl Command
+Following is an example of the curl command you can use to make inference. You can find the exact curl command in the Model's API page in Inferless.
+```bash
+curl --location '<your_inference_url>' \
+          --header 'Content-Type: application/json' \
+          --header 'Authorization: Bearer <your_api_key>' \
+          --data '{
+              "inputs": [
+                {
+                  "data": [
+                    "a living room, bright modern Scandinavian style house, large windows, magazine photoshoot, 8k, studio lighting"
+                  ],
+                  "name": "prompt",
+                  "shape": [
+                    1
+                  ],
+                  "datatype": "BYTES"
+                },
+                {
+                  "data": [
+                    "low quality"
+                  ],
+                  "name": "negative_prompt",
+                  "shape": [
+                    1
+                  ],
+                  "datatype": "BYTES"
+                }
+              ]
+            }
+            '
+```
+
 
 ---
 ## Customizing the Code
