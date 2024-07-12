@@ -13,7 +13,10 @@ class InferlessPythonModel:
     def infer(self, inputs):
         prompt = inputs["prompt"]
         negative_prompt = inputs["negative_prompt"]
-        image = self.pipe(prompt,negative_prompt=negative_prompt,num_inference_steps=28,guidance_scale=7.0,).images[0]
+        inference_steps = inputs["num_inference_steps"]
+        guidance_scale = inputs["guidance_scale"]
+        
+        image = self.pipe(prompt,negative_prompt=negative_prompt,num_inference_steps=inference_steps,guidance_scale=guidance_scale).images[0]
         buff = BytesIO()
         image.save(buff, format="JPEG")
         img_str = base64.b64encode(buff.getvalue()).decode()
