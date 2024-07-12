@@ -3,13 +3,13 @@
 
 ## TL;DR:
 - Deployment of stable-diffusion-3-medium-diffusers model using [Diffusers](https://github.com/huggingface/diffusers).
-- You can expect an average latency of `4.4 sec` for generating an image in `28`steps. This setup has an average cold start time of `9.9 sec`.
+- You can expect an average latency of `4.4 sec` for generating an image in `28`steps. This setup has an average cold start time of `9.9 sec` *(For benchmark we have used Nvidia A100-80GB GPU)*.
 - Dependencies defined in `inferless-runtime-config.yaml`.
 - GitHub/GitLab template creation with `app.py`, `inferless-runtime-config.yaml` and `inferless.yaml`.
 - Model class in `app.py` with `initialize`, `infer`, and `finalize` functions.
 - Custom runtime creation with necessary system and Python packages.
 - Model import via GitHub with `input_schema.py` file.
-- Recommended GPU: NVIDIA A100 for optimal performance.
+- Recommended GPU: NVIDIA L4.
 - Custom runtime selection in advanced configuration.
 - Final review and deployment on the Inferless platform.
 
@@ -43,28 +43,27 @@ curl --location '<your_inference_url>' \
           --data '{
               "inputs": [
                 {
-                  "data": [
-                    "a living room, bright modern Scandinavian style house, large windows, magazine photoshoot, 8k, studio lighting"
-                  ],
+                  "data": ["a living room, bright modern Scandinavian style house, large windows, magazine photoshoot, 8k, studio lighting"],
                   "name": "prompt",
-                  "shape": [
-                    1
-                  ],
-                  "datatype": "BYTES"
-                },
+                  "shape": [1],
+                  "datatype": "BYTES"},
                 {
-                  "data": [
-                    "low quality"
-                  ],
+                  "data": ["low quality"],
                   "name": "negative_prompt",
-                  "shape": [
-                    1
-                  ],
-                  "datatype": "BYTES"
-                }
-              ]
-            }
-            '
+                  "shape": [1],
+                  "datatype": "BYTES"},
+                {
+                  "data": [28],
+                  "name": "num_inference_steps"
+                  "shape": [1],
+                  "datatype": "INT8"},
+                {
+                  "data": [7.0],
+                  "name": "guidance_scale"
+                  "shape": [1],
+                  "datatype": "FP32"}
+                  ]
+            }'
 ```
 
 
@@ -80,6 +79,8 @@ Open the `app.py` file. This contains the main code for inference. It has three 
 def infer(self, inputs):
     prompt = inputs["prompt"]
     negative_prompt = inputs["negative_prompt"]
+    inference_steps = inputs["num_inference_steps"]
+    guidance_scale = inputs["guidance_scale"]
 ```
 
 **Finalize** - This function is used to perform any cleanup activity for example you can unload the model from the gpu by setting to `None`.
