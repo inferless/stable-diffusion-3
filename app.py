@@ -1,3 +1,6 @@
+import os
+os.environ["HF_HUB_ENABLE_HF_TRANSFER"]='1'
+from huggingface_hub import snapshot_download
 from diffusers import StableDiffusion3Pipeline
 import torch
 from io import BytesIO
@@ -7,7 +10,9 @@ import os
 class InferlessPythonModel:
     def initialize(self):
         HF_TOKEN =  os.getenv("HUGGINGFACE_AUTH_TOKEN") # Access Hugging Face token from environment variable
-        self.pipe = StableDiffusion3Pipeline.from_pretrained("stabilityai/stable-diffusion-3-medium-diffusers", torch_dtype=torch.float16,token=HF_TOKEN)
+        model_id = "stabilityai/stable-diffusion-3-medium-diffusers"
+        snapshot_download(repo_id=model_id,allow_patterns=["*.safetensors"])
+        self.pipe = StableDiffusion3Pipeline.from_pretrained(model_id, torch_dtype=torch.float16,token=HF_TOKEN)
         self.pipe = self.pipe.to("cuda")
         
     def infer(self, inputs):
